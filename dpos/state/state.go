@@ -413,7 +413,11 @@ func (s *State) IsDPOSTransaction(tx *types.Transaction) bool {
 // ProcessBlock takes a block and it's confirm to update producers state and
 // votes accordingly.
 func (s *State) ProcessBlock(block *types.Block, confirm *payload.Confirm) {
+	log.Info("### State ProcessBlock start")
+	defer log.Info("### State ProcessBlock end")
+
 	s.mtx.Lock()
+	log.Info("### State ProcessBlock lock")
 	defer s.mtx.Unlock()
 
 	s.processTransactions(block.Transactions, block.Height)

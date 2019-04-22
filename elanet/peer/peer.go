@@ -624,55 +624,84 @@ func New(orgPeer server.IPeer, listeners *Listeners) *Peer {
 
 	p.OnSendDone(p.sendDoneQueue)
 	p.AddMessageFunc(func(_ *peer.Peer, m p2p.Message) {
+		log.Info("@@@ stallControl <- sccReceiveMessage")
 		p.stallControl <- stallControlMsg{sccReceiveMessage, m}
 
 		// Handle each supported message type.
+		log.Info("@@@ stallControl <- sccHandlerStart")
 		p.stallControl <- stallControlMsg{sccHandlerStart, m}
 		switch m := m.(type) {
 		case *msg.Version:
+			log.Info("@@@ Version start")
 			// Disconnect full node peers that do not support DPOS protocol.
 			if m.Relay && p.ProtocolVersion() < pact.DPOSStartVersion {
 				p.Disconnect()
+				log.Info("@@@ Version end1")
 				return
 			}
 
 			p.SetDisableRelayTx(!m.Relay)
+			log.Info("@@@ Version end")
 
 		case *msg.MemPool:
+			log.Info("@@@ OnMemPool start")
 			listeners.OnMemPool(p, m)
+			log.Info("@@@ OnMemPool end")
 
 		case *msg.Tx:
+			log.Info("@@@ OnTx start")
 			listeners.OnTx(p, m)
+			log.Info("@@@ OnTx end")
 
 		case *msg.Block:
+			log.Info("@@@ OnBlock start")
 			listeners.OnBlock(p, m)
+			log.Info("@@@ OnBlock end")
 
 		case *msg.Inv:
+			log.Info("@@@ OnInv start")
 			listeners.OnInv(p, m)
+			log.Info("@@@ OnInv end")
 
 		case *msg.NotFound:
+			log.Info("@@@ OnNotFound start")
 			listeners.OnNotFound(p, m)
+			log.Info("@@@ OnNotFound end")
 
 		case *msg.GetData:
+			log.Info("@@@ OnGetData start")
 			listeners.OnGetData(p, m)
+			log.Info("@@@ OnGetData end")
 
 		case *msg.GetBlocks:
+			log.Info("@@@ OnGetBlocks start")
 			listeners.OnGetBlocks(p, m)
+			log.Info("@@@ OnGetBlocks end")
 
 		case *msg.FilterAdd:
+			log.Info("@@@ OnFilterAdd start")
 			listeners.OnFilterAdd(p, m)
+			log.Info("@@@ OnFilterAdd end")
 
 		case *msg.FilterClear:
+			log.Info("@@@ OnFilterClear start")
 			listeners.OnFilterClear(p, m)
+			log.Info("@@@ OnFilterClear end")
 
 		case *msg.FilterLoad:
+			log.Info("@@@ OnFilterLoad start")
 			listeners.OnFilterLoad(p, m)
+			log.Info("@@@ OnFilterLoad end")
 
 		case *msg.TxFilterLoad:
+			log.Info("@@@ OnTxFilterLoad start")
 			listeners.OnTxFilterLoad(p, m)
+			log.Info("@@@ OnTxFilterLoad end")
 
 		case *msg.Reject:
+			log.Info("@@@ OnReject start")
 			listeners.OnReject(p, m)
+			log.Info("@@@ OnReject end")
 
 		case *msg.VerAck, *msg.GetAddr, *msg.Addr, *msg.Ping, *msg.Pong:
 		//	Basic messages have been handled, ignore them.
@@ -681,7 +710,9 @@ func New(orgPeer server.IPeer, listeners *Listeners) *Peer {
 			log.Debugf("Received unhandled message of type %v "+
 				"from %v", m.CMD(), p)
 		}
+		log.Info("@@@ stallControl <- sccHandlerDone")
 		p.stallControl <- stallControlMsg{sccHandlerDone, m}
+		log.Info("@@@ stallControl <- Done")
 	})
 
 	return p.start()

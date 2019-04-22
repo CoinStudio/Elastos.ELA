@@ -50,6 +50,7 @@ type Server struct {
 
 func Start() {
 	events.Subscribe(func(e *events.Event) {
+		log.Info("&&& subscribte 2 start:", e.Type)
 		switch e.Type {
 		case events.ETBlockConnected:
 			SendBlock2WSclient(e.Data)
@@ -57,6 +58,7 @@ func Start() {
 		case events.ETTransactionAccepted:
 			SendTx2Client(e.Data)
 		}
+		log.Info("&&& subscribte 2 end:", e.Type)
 	})
 
 	instance = &Server{

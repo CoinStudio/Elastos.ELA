@@ -628,7 +628,9 @@ out:
 		}
 
 		// Call handle message which is configured on peer creation.
+		log.Info("@@@@ p.cfg.handleMessage(p, rmsg) start")
 		p.cfg.handleMessage(p, rmsg)
+		log.Info("@@@@ p.cfg.handleMessage(p, rmsg) end")
 
 		// A message was received so reset the idle timer.
 		idleTimer.Reset(idleTimeout)

@@ -739,13 +739,19 @@ func newPeerConfig(sp *serverPeer) *peer.Config {
 	cfg.AddMessageFunc(func(peer *peer.Peer, m p2p.Message) {
 		switch m := m.(type) {
 		case *msg.Version:
+			log.Info("@@@@@ sp.OnVersion start")
 			sp.OnVersion(peer, m)
+			log.Info("@@@@@ sp.OnVersion end")
 
 		case *msg.GetAddr:
+			log.Info("@@@@@ OnGetAddr start")
 			sp.OnGetAddr(peer, m)
+			log.Info("@@@@@ OnGetAddr end")
 
 		case *msg.Addr:
+			log.Info("@@@@@ OnAddr start")
 			sp.OnAddr(peer, m)
+			log.Info("@@@@@ OnAddr end")
 
 		}
 	})

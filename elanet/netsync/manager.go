@@ -336,6 +336,9 @@ func (sm *SyncManager) current() bool {
 
 // handleBlockMsg handles block messages from all peers.
 func (sm *SyncManager) handleBlockMsg(bmsg *blockMsg) {
+	log.Info("#### handleBlockMsg start")
+	defer log.Info("#### handleBlockMsg end")
+
 	peer := bmsg.peer
 	state, exists := sm.peerStates[peer]
 	if !exists {
@@ -695,6 +698,9 @@ out:
 // things such as request orphan block parents and relay accepted blocks to
 // connected peers.
 func (sm *SyncManager) handleBlockchainEvents(event *events.Event) {
+	log.Info("&&& handleBlockchainEvents start:", event.Type)
+	defer log.Info("&&& handleBlockchainEvents end:", event.Type)
+
 	switch event.Type {
 	// A transaction has been accepted into the transaction mem pool.  See if it
 	// is a illegal block transaction.

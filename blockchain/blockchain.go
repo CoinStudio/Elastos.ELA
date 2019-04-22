@@ -754,7 +754,6 @@ func (b *BlockChain) reorganizeChain(detachNodes, attachNodes *list.List) error 
 		block := b.blockCache[*n.Hash]
 		confirm := b.confirmCache[*n.Hash]
 
-
 		log.Info("connect block:", block.Height)
 		err := b.connectBlock(n, block, confirm)
 		if err != nil {
@@ -878,6 +877,9 @@ func (b *BlockChain) BlockExists(hash *Uint256) bool {
 }
 
 func (b *BlockChain) maybeAcceptBlock(block *Block, confirm *payload.Confirm) (bool, error) {
+	log.Info("### maybeAcceptBlock start")
+	defer log.Info("### maybeAcceptBlock end")
+
 	// Get a block node for the block previous to this one.  Will be nil
 	// if this is the genesis block.
 	prevNode, err := b.getPrevNodeFromBlock(block)
@@ -1080,6 +1082,9 @@ func (b *BlockChain) ReorganizeChain(block *Block) error {
 //2. isOphan
 //3. error
 func (b *BlockChain) processBlock(block *Block, confirm *payload.Confirm) (bool, bool, error) {
+	log.Info("### processBlock start")
+	defer log.Info("### processBlock end")
+
 	blockHash := block.Hash()
 	log.Debugf("[ProcessBLock] height = %d, hash = %x", block.Header.Height, blockHash.Bytes())
 

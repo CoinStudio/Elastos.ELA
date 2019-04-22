@@ -59,8 +59,13 @@ type arbitrators struct {
 }
 
 func (a *arbitrators) ProcessBlock(block *types.Block, confirm *payload.Confirm) {
+	log.Info("###  arbitrators ProcessBlock start")
 	a.State.ProcessBlock(block, confirm)
+	log.Info("###  arbitrators ProcessBlock end")
+
+	log.Info("###  arbitrators IncreaseChainHeight start")
 	a.IncreaseChainHeight(block.Height)
+	log.Info("###  arbitrators IncreaseChainHeight end ")
 }
 
 func (a *arbitrators) ProcessSpecialTxPayload(p types.Payload,

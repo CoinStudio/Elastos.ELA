@@ -45,6 +45,9 @@ func (bm *BlockPool) AddDposBlock(dposBlock *types.DposBlock) (bool, bool, error
 }
 
 func (bm *BlockPool) AppendDposBlock(dposBlock *types.DposBlock) (bool, bool, error) {
+	log.Info("#### AppendDposBlock start")
+	defer log.Info("#### AppendDposBlock end")
+
 	bm.Lock()
 	defer bm.Unlock()
 	if !dposBlock.HaveConfirm {
@@ -54,7 +57,9 @@ func (bm *BlockPool) AppendDposBlock(dposBlock *types.DposBlock) (bool, bool, er
 }
 
 func (bm *BlockPool) appendBlock(dposBlock *types.DposBlock) (bool, bool, error) {
-	// add block
+	log.Info("#### appendBlock start")
+	defer log.Info("#### appendBlock end")
+
 	block := dposBlock.Block
 	hash := block.Hash()
 	if _, ok := bm.blocks[hash]; ok {
@@ -93,6 +98,9 @@ func (bm *BlockPool) appendBlock(dposBlock *types.DposBlock) (bool, bool, error)
 }
 
 func (bm *BlockPool) appendBlockAndConfirm(dposBlock *types.DposBlock) (bool, bool, error) {
+	log.Info("#### appendBlockAndConfirm start")
+	defer log.Info("#### appendBlockAndConfirm end")
+
 	block := dposBlock.Block
 	hash := block.Hash()
 	// verify block
@@ -116,6 +124,8 @@ func (bm *BlockPool) appendBlockAndConfirm(dposBlock *types.DposBlock) (bool, bo
 
 func (bm *BlockPool) appendConfirm(confirm *payload.Confirm) (
 	bool, bool, error) {
+	log.Info("#### appendConfirm start")
+	defer log.Info("#### appendConfirm end")
 
 	// verify confirmation
 	if err := blockchain.ConfirmSanityCheck(confirm); err != nil {

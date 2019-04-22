@@ -189,8 +189,8 @@ func NewArbitrator(password []byte, cfg Config) (*Arbitrator, error) {
 			ChainParams:  cfg.ChainParams,
 			EventStoreAnalyzerConfig: store.EventStoreAnalyzerConfig{
 				InactiveEliminateCount: cfg.ChainParams.InactiveEliminateCount,
-				Store:       cfg.Store,
-				Arbitrators: cfg.Arbitrators,
+				Store:                  cfg.Store,
+				Arbitrators:            cfg.Arbitrators,
 			},
 		})
 	dposHandlerSwitch.Initialize(proposalDispatcher, consensus)
@@ -213,6 +213,7 @@ func NewArbitrator(password []byte, cfg Config) (*Arbitrator, error) {
 	}
 
 	events.Subscribe(func(e *events.Event) {
+		log.Info("&&& Subscribe1 start: ", e.Type)
 		switch e.Type {
 		case events.ETNewBlockReceived:
 			block := e.Data.(*types.DposBlock)
@@ -232,6 +233,8 @@ func NewArbitrator(password []byte, cfg Config) (*Arbitrator, error) {
 				a.OnInactiveArbitratorsTxReceived(tx.Payload.(*payload.InactiveArbitrators))
 			}
 		}
+		log.Info("&&& Subscribe1 end:", e.Type)
+
 	})
 
 	return &a, nil
